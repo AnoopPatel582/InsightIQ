@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InsightIQ — Login</title>
+  <meta name="description" content="Sign in to InsightIQ, the intelligent business analytics and decision-support platform." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="login-bg">
+  <div class="login-card">
+
+    <!-- Logo -->
+    <div class="login-logo">
+      <div class="logo-icon">📊</div>
+      <span class="logo-text">InsightIQ</span>
+    </div>
+
+    <p class="login-title">Sign in to your analytics dashboard</p>
+
+    <!-- Login Form -->
+    <form id="loginForm" novalidate>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="admin"
+          autocomplete="username"
+          required
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+
+      <button type="submit" class="btn-primary" id="loginBtn">
+        Sign In
+      </button>
+
+      <div class="login-error" id="loginError" role="alert"></div>
+
+    </form>
+
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

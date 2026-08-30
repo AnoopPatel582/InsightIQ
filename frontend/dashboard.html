@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InsightIQ — Dashboard</title>
+  <meta name="description" content="InsightIQ business analytics dashboard — KPIs, charts, and rule-based insights." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="spinner"></div>
+</div>
+
+<div class="dashboard-layout">
+
+  <!-- ===== Navbar ===== -->
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <div class="logo-icon">📊</div>
+      <span class="logo-text">InsightIQ</span>
+    </div>
+    <div class="navbar-right">
+      <div class="navbar-user">Signed in as <span id="navUsername">—</span></div>
+      <button class="btn-logout" id="logoutBtn">Sign Out</button>
+    </div>
+  </nav>
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="sidebar">
+    <div class="sidebar-section-label">Analytics</div>
+    <a href="#kpis" class="sidebar-nav-item active">
+      <span class="nav-icon">📈</span> KPIs
+    </a>
+    <a href="#sales-trend" class="sidebar-nav-item">
+      <span class="nav-icon">📅</span> Sales Trend
+    </a>
+    <a href="#regions" class="sidebar-nav-item">
+      <span class="nav-icon">🗺️</span> Regions
+    </a>
+    <a href="#categories" class="sidebar-nav-item">
+      <span class="nav-icon">🏷️</span> Categories
+    </a>
+    <a href="#products" class="sidebar-nav-item">
+      <span class="nav-icon">📦</span> Products
+    </a>
+    <a href="#customers" class="sidebar-nav-item">
+      <span class="nav-icon">👥</span> Customers
+    </a>
+
+    <div class="sidebar-section-label">Insights</div>
+    <a href="#insights" class="sidebar-nav-item">
+      <span class="nav-icon">💡</span> Key Insights
+    </a>
+
+    <div class="sidebar-section-label">Data</div>
+    <a href="#upload" class="sidebar-nav-item">
+      <span class="nav-icon">⬆️</span> Upload CSV
+    </a>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Business Analytics Dashboard</h1>
+      <p id="lastUpdated">Loading data...</p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="filterDateFrom">From</label>
+        <input type="date" id="filterDateFrom" />
+      </div>
+      <div class="filter-group">
+        <label for="filterDateTo">To</label>
+        <input type="date" id="filterDateTo" />
+      </div>
+      <div class="filter-group">
+        <label for="filterRegion">Region</label>
+        <select id="filterRegion">
+          <option value="">All Regions</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="filterCategory">Category</label>
+        <select id="filterCategory">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <button class="btn-filter" id="applyFiltersBtn">Apply Filters</button>
+      <button class="btn-reset" id="resetFiltersBtn">Reset</button>
+    </div>
+
+    <!-- ===== KPI Cards ===== -->
+    <section id="kpis">
+      <div class="kpi-grid">
+
+        <div class="kpi-card" style="--card-gradient: var(--grad-blue); --card-icon-bg: rgba(59,130,246,0.15);">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-label">Total Revenue</div>
+          <div class="kpi-value" id="kpiRevenue">—</div>
+          <div class="kpi-sub">Sum of all sales</div>
+        </div>
+
+        <div class="kpi-card" style="--card-gradient: var(--grad-green); --card-icon-bg: rgba(16,185,129,0.15);">
+          <div class="kpi-icon">📈</div>
+          <div class="kpi-label">Total Profit</div>
+          <div class="kpi-value" id="kpiProfit">—</div>
+          <div class="kpi-sub">Sum of all profit</div>
+        </div>
+
+        <div class="kpi-card" style="--card-gradient: var(--grad-purple); --card-icon-bg: rgba(139,92,246,0.15);">
+          <div class="kpi-icon">🧾</div>
+          <div class="kpi-label">Total Orders</div>
+          <div class="kpi-value" id="kpiOrders">—</div>
+          <div class="kpi-sub">Distinct order count</div>
+        </div>
+
+        <div class="kpi-card" style="--card-gradient: linear-gradient(135deg,#06b6d4,#3b82f6); --card-icon-bg: rgba(6,182,212,0.15);">
+          <div class="kpi-icon">📦</div>
+          <div class="kpi-label">Total Quantity</div>
+          <div class="kpi-value" id="kpiQuantity">—</div>
+          <div class="kpi-sub">Units sold</div>
+        </div>
+
+        <div class="kpi-card" style="--card-gradient: var(--grad-amber); --card-icon-bg: rgba(245,158,11,0.15);">
+          <div class="kpi-icon">🛒</div>
+          <div class="kpi-label">Avg Order Value</div>
+          <div class="kpi-value" id="kpiAOV">—</div>
+          <div class="kpi-sub">Revenue / orders</div>
+        </div>
+
+        <div class="kpi-card" style="--card-gradient: linear-gradient(135deg,#10b981,#f59e0b); --card-icon-bg: rgba(16,185,129,0.12);">
+          <div class="kpi-icon">🎯</div>
+          <div class="kpi-label">Profit Margin</div>
+          <div class="kpi-value" id="kpiMargin">—</div>
+          <div class="kpi-sub">Profit / revenue × 100</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== Charts Row 1: Sales Trend + Regions ===== -->
+    <div class="charts-grid" id="sales-trend">
+
+      <div class="chart-card col-8">
+        <div class="chart-card-header">
+          <h2>📅 Sales Trend</h2>
+          <span class="chart-badge">Monthly</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartSalesTrend"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card col-4" id="regions">
+        <div class="chart-card-header">
+          <h2>🗺️ Revenue by Region</h2>
+          <span class="chart-badge">Doughnut</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartRegions"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== Charts Row 2: Categories + Products ===== -->
+    <div class="charts-grid">
+
+      <div class="chart-card col-6" id="categories">
+        <div class="chart-card-header">
+          <h2>🏷️ Category Performance</h2>
+          <span class="chart-badge">Revenue & Profit</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartCategories"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card col-6" id="products">
+        <div class="chart-card-header">
+          <h2>📦 Top 10 Products</h2>
+          <span class="chart-badge">By Revenue</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chartProducts"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== Charts Row 3: Top Customers ===== -->
+    <div class="charts-grid" id="customers">
+      <div class="chart-card col-12">
+        <div class="chart-card-header">
+          <h2>👥 Top 10 Customers by Revenue</h2>
+          <span class="chart-badge">Horizontal Bar</span>
+        </div>
+        <div class="chart-container" style="height: 320px;">
+          <canvas id="chartCustomers"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Key Business Insights ===== -->
+    <section class="insights-section" id="insights">
+      <h2>💡 Key Business Insights</h2>
+      <div class="insights-grid" id="insightsGrid">
+        <p style="color: var(--text-muted); font-size: 0.875rem;">Loading insights...</p>
+      </div>
+    </section>
+
+    <!-- ===== CSV Upload ===== -->
+    <section class="upload-section" id="upload">
+      <h2>⬆️ Upload Sales Data</h2>
+      <div class="upload-form">
+        <input type="file" id="csvFile" accept=".csv" />
+        <button class="btn-upload" id="uploadBtn">Upload CSV</button>
+        <div class="upload-status" id="uploadStatus"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
