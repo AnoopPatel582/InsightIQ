@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base resets ───────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #0a0e1a;
+  color: #f0f4ff;
+  font-family: "Inter", system-ui, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Custom scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0a0e1a; }
+::-webkit-scrollbar-thumb { background: rgba(99,130,201,0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+
+/* ── Gradient text utility ────────────────────────────────── */
+@layer utilities {
+  .text-gradient-blue {
+    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-purple {
+    background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-blue   { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+  .bg-gradient-purple { background: linear-gradient(135deg, #8b5cf6, #ec4899); }
+  .bg-gradient-green  { background: linear-gradient(135deg, #10b981, #3b82f6); }
+  .bg-gradient-amber  { background: linear-gradient(135deg, #f59e0b, #ef4444); }
+
+  /* Card top accent bar */
+  .card-accent-blue   { border-top: 3px solid #3b82f6; }
+  .card-accent-purple { border-top: 3px solid #8b5cf6; }
+  .card-accent-green  { border-top: 3px solid #10b981; }
+  .card-accent-amber  { border-top: 3px solid #f59e0b; }
+  .card-accent-cyan   { border-top: 3px solid #06b6d4; }
+
+  /* Glassmorphism card base */
+  .glass-card {
+    background: #1a2234;
+    border: 1px solid rgba(99, 130, 201, 0.15);
+    border-radius: 16px;
+    transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .glass-card:hover {
+    background: #1e2a3e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+
+  /* Fade slide up animation */
+  .animate-fade-up {
+    animation: fadeSlideUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  }
+}
+
+@keyframes fadeSlideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
