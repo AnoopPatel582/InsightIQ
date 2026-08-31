@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import KpiSection from "@/components/KpiSection";
+import KpiSection       from "@/components/KpiSection";
+import SalesTrendChart  from "@/components/SalesTrendChart";
+import RegionsChart     from "@/components/RegionsChart";
 
 /**
  * Dashboard overview page — /dashboard
- *
- * Manages shared filter state that will be passed down to all sections.
- * Charts, insights, and filters are added in subsequent steps (F5–F10).
+ * Manages shared filter state passed down to all sections.
  */
 export default function DashboardPage() {
-  // Shared filter state — passed to every data-fetching section
   const [filters, setFilters] = useState({
     date_from: "",
     date_to:   "",
@@ -32,10 +31,27 @@ export default function DashboardPage() {
       {/* ── KPI Cards ─────────────────────────────────────── */}
       <KpiSection filters={filters} />
 
-      {/* ── Charts placeholder (F5–F8) ────────────────────── */}
-      <section id="charts">
-        <div className="h-64 glass-card flex items-center justify-center text-text-muted text-sm">
-          Charts — coming in Steps F5–F8
+      {/* ── Charts row ────────────────────────────────────── */}
+      <section id="charts" className="space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">
+          Charts &amp; Trends
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Sales Trend takes 2/3 width on large screens */}
+          <div className="lg:col-span-2">
+            <SalesTrendChart filters={filters} />
+          </div>
+          {/* Regions doughnut takes 1/3 */}
+          <div className="lg:col-span-1">
+            <RegionsChart filters={filters} />
+          </div>
+        </div>
+      </section>
+
+      {/* ── More charts placeholder (F6–F8) ───────────────── */}
+      <section id="more-charts">
+        <div className="h-48 glass-card flex items-center justify-center text-text-muted text-sm">
+          Categories + Products + Customers — coming in Steps F6–F8
         </div>
       </section>
 
