@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import KpiSection       from "@/components/KpiSection";
-import SalesTrendChart  from "@/components/SalesTrendChart";
-import RegionsChart     from "@/components/RegionsChart";
+import KpiSection      from "@/components/KpiSection";
+import SalesTrendChart from "@/components/SalesTrendChart";
+import RegionsChart    from "@/components/RegionsChart";
+import CategoriesChart from "@/components/CategoriesChart";
+import ProductsChart   from "@/components/ProductsChart";
 
-/**
- * Dashboard overview page — /dashboard
- * Manages shared filter state passed down to all sections.
- */
 export default function DashboardPage() {
   const [filters, setFilters] = useState({
     date_from: "",
@@ -31,27 +29,36 @@ export default function DashboardPage() {
       {/* ── KPI Cards ─────────────────────────────────────── */}
       <KpiSection filters={filters} />
 
-      {/* ── Charts row ────────────────────────────────────── */}
+      {/* ── Row 1: Sales Trend + Regions ──────────────────── */}
       <section id="charts" className="space-y-4">
         <h3 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">
           Charts &amp; Trends
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Sales Trend takes 2/3 width on large screens */}
           <div className="lg:col-span-2">
             <SalesTrendChart filters={filters} />
           </div>
-          {/* Regions doughnut takes 1/3 */}
           <div className="lg:col-span-1">
             <RegionsChart filters={filters} />
           </div>
         </div>
       </section>
 
-      {/* ── More charts placeholder (F6–F8) ───────────────── */}
-      <section id="more-charts">
-        <div className="h-48 glass-card flex items-center justify-center text-text-muted text-sm">
-          Categories + Products + Customers — coming in Steps F6–F8
+      {/* ── Row 2: Categories + Top Products ──────────────── */}
+      <section className="space-y-4">
+        <h3 className="text-sm font-semibold uppercase tracking-widest text-text-secondary">
+          Categories &amp; Products
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <CategoriesChart filters={filters} />
+          <ProductsChart   filters={filters} />
+        </div>
+      </section>
+
+      {/* ── Top Customers placeholder (F7) ────────────────── */}
+      <section id="customers">
+        <div className="h-32 glass-card flex items-center justify-center text-text-muted text-sm">
+          Top Customers chart — coming in Step F7
         </div>
       </section>
 
