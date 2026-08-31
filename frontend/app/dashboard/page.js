@@ -1,12 +1,25 @@
+"use client";
+
+import { useState } from "react";
+import KpiSection from "@/components/KpiSection";
+
 /**
  * Dashboard overview page — /dashboard
  *
- * This is a placeholder shell that will be progressively filled
- * with KPI cards, charts, insights, and filters in subsequent steps.
+ * Manages shared filter state that will be passed down to all sections.
+ * Charts, insights, and filters are added in subsequent steps (F5–F10).
  */
 export default function DashboardPage() {
+  // Shared filter state — passed to every data-fetching section
+  const [filters, setFilters] = useState({
+    date_from: "",
+    date_to:   "",
+    region:    "",
+    category:  "",
+  });
+
   return (
-    <div className="space-y-8 animate-fade-up">
+    <div className="space-y-10 animate-fade-up">
 
       {/* Page header */}
       <div>
@@ -16,19 +29,17 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* ── Placeholder sections (filled in F4–F10) ───────── */}
-      <section id="kpis">
-        <div className="h-32 glass-card flex items-center justify-center text-text-muted text-sm">
-          KPI Cards — coming in Step F4
-        </div>
-      </section>
+      {/* ── KPI Cards ─────────────────────────────────────── */}
+      <KpiSection filters={filters} />
 
+      {/* ── Charts placeholder (F5–F8) ────────────────────── */}
       <section id="charts">
         <div className="h-64 glass-card flex items-center justify-center text-text-muted text-sm">
           Charts — coming in Steps F5–F8
         </div>
       </section>
 
+      {/* ── Insights + Upload placeholder (F9) ────────────── */}
       <section id="insights">
         <div className="h-32 glass-card flex items-center justify-center text-text-muted text-sm">
           Insights &amp; Upload — coming in Step F9
