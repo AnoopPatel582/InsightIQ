@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import KpiSection      from "@/components/KpiSection";
-import SalesTrendChart from "@/components/SalesTrendChart";
-import RegionsChart    from "@/components/RegionsChart";
-import CategoriesChart from "@/components/CategoriesChart";
-import ProductsChart   from "@/components/ProductsChart";
-import CustomersChart  from "@/components/CustomersChart";
+import { useState, useCallback } from "react";
+import KpiSection       from "@/components/KpiSection";
+import SalesTrendChart  from "@/components/SalesTrendChart";
+import RegionsChart     from "@/components/RegionsChart";
+import CategoriesChart  from "@/components/CategoriesChart";
+import ProductsChart    from "@/components/ProductsChart";
+import CustomersChart   from "@/components/CustomersChart";
+import InsightsSection  from "@/components/InsightsSection";
+import UploadSection    from "@/components/UploadSection";
 
 export default function DashboardPage() {
   const [filters, setFilters] = useState({
@@ -15,6 +17,19 @@ export default function DashboardPage() {
     region:    "",
     category:  "",
   });
+
+  /**
+   * uploadKey — incrementing this value is passed as a key prop suffix
+   * to all data sections, which forces React to remount them and
+   * re-fetch fresh data after a successful CSV upload.
+   */
+  const [uploadKey, setUploadKey] = useState(0);
+  const handleUploadSuccess = useCallback(() => {
+    setUploadKey((k) => k + 1);
+  }, []);
+
+  // Append uploadKey to filters so useEffect re-runs in child components
+  const effectiveFilters = { ...filters, _refresh: uploadKey };
 
   return (
     <div className="space-y-10 animate-fade-up">
@@ -27,8 +42,11 @@ export default function DashboardPage() {
         </p>
       </div>
 
+      {/* ── CSV Upload ─────────────────────────────────────── */}
+      <UploadSection onSuccess={handleUploadSuccess} />
+
       {/* ── KPI Cards ─────────────────────────────────────── */}
-      <KpiSection filters={filters} />
+      <KpiSection filters={effectiveFilters} />
 
       {/* ── Row 1: Sales Trend + Regions ──────────────────── */}
       <section id="charts" className="space-y-4">
@@ -37,10 +55,10 @@ export default function DashboardPage() {
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <SalesTrendChart filters={filters} />
+            <SalesTrendChart filters={effectiveFilters} />
           </div>
           <div className="lg:col-span-1">
-            <RegionsChart filters={filters} />
+            <RegionsChart filters={effectiveFilters} />
           </div>
         </div>
       </section>
@@ -51,8 +69,8 @@ export default function DashboardPage() {
           Categories &amp; Products
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CategoriesChart filters={filters} />
-          <ProductsChart   filters={filters} />
+          <CategoriesChart filters={effectiveFilters} />
+          <ProductsChart   filters={effectiveFilters} />
         </div>
       </section>
 
@@ -62,8 +80,7 @@ export default function DashboardPage() {
           Top Customers
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <CustomersChart filters={filters} />
-          {/* Summary stats card alongside the chart */}
+          <CustomersChart filters={effectiveFilters} />
           <div className="glass-card p-5 flex flex-col justify-center space-y-5">
             <div>
               <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary mb-1">
@@ -90,12 +107,8 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ── Insights + Upload placeholder (F9) ────────────── */}
-      <section id="insights">
-        <div className="h-32 glass-card flex items-center justify-center text-text-muted text-sm">
-          Insights &amp; Upload — coming in Step F9
-        </div>
-      </section>
+      {/* ── Business Insights ──────────────────────────────── */}
+      <InsightsSection filters={effectiveFilters} />
 
     </div>
   );
