@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import KpiSection       from "@/components/KpiSection";
-import SalesTrendChart  from "@/components/SalesTrendChart";
-import RegionsChart     from "@/components/RegionsChart";
-import CategoriesChart  from "@/components/CategoriesChart";
-import ProductsChart    from "@/components/ProductsChart";
-import CustomersChart   from "@/components/CustomersChart";
-import InsightsSection  from "@/components/InsightsSection";
-import UploadSection    from "@/components/UploadSection";
+import FilterBar       from "@/components/FilterBar";
+import KpiSection      from "@/components/KpiSection";
+import SalesTrendChart from "@/components/SalesTrendChart";
+import RegionsChart    from "@/components/RegionsChart";
+import CategoriesChart from "@/components/CategoriesChart";
+import ProductsChart   from "@/components/ProductsChart";
+import CustomersChart  from "@/components/CustomersChart";
+import InsightsSection from "@/components/InsightsSection";
+import UploadSection   from "@/components/UploadSection";
 
 export default function DashboardPage() {
   const [filters, setFilters] = useState({
@@ -19,22 +20,25 @@ export default function DashboardPage() {
   });
 
   /**
-   * uploadKey — incrementing this value is passed as a key prop suffix
-   * to all data sections, which forces React to remount them and
-   * re-fetch fresh data after a successful CSV upload.
+   * uploadKey — increments on successful upload.
+   * Passed to FilterBar (reloads dropdowns) and appended to
+   * effectiveFilters (_refresh) to force all data sections to re-fetch.
    */
   const [uploadKey, setUploadKey] = useState(0);
   const handleUploadSuccess = useCallback(() => {
     setUploadKey((k) => k + 1);
   }, []);
 
-  // Append uploadKey to filters so useEffect re-runs in child components
+  const handleFilterChange = useCallback((newFilters) => {
+    setFilters(newFilters);
+  }, []);
+
   const effectiveFilters = { ...filters, _refresh: uploadKey };
 
   return (
-    <div className="space-y-10 animate-fade-up">
+    <div className="space-y-8 animate-fade-up">
 
-      {/* Page header */}
+      {/* ── Page header ─────────────────────────────────────── */}
       <div>
         <h2 className="text-2xl font-bold text-text-primary">Overview</h2>
         <p className="mt-1 text-sm text-text-secondary">
@@ -42,8 +46,8 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      {/* ── CSV Upload ─────────────────────────────────────── */}
-      <UploadSection onSuccess={handleUploadSuccess} />
+      {/* ── Filter Bar ──────────────────────────────────────── */}
+      <FilterBar onChange={handleFilterChange} refreshKey={uploadKey} />
 
       {/* ── KPI Cards ─────────────────────────────────────── */}
       <KpiSection filters={effectiveFilters} />
@@ -97,8 +101,10 @@ export default function DashboardPage() {
                 <span className="text-xs text-text-muted">Revenue (purple bars)</span>
               </div>
               <div className="flex items-center gap-2">
-                <svg className="w-3 h-3 text-text-muted" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg className="w-3 h-3 text-text-muted" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <span className="text-xs text-text-muted">Tooltip shows region on hover</span>
               </div>
@@ -109,6 +115,9 @@ export default function DashboardPage() {
 
       {/* ── Business Insights ──────────────────────────────── */}
       <InsightsSection filters={effectiveFilters} />
+
+      {/* ── CSV Upload ─────────────────────────────────────── */}
+      <UploadSection onSuccess={handleUploadSuccess} />
 
     </div>
   );
