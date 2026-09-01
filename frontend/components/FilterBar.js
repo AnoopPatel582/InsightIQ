@@ -5,25 +5,13 @@ import { apiFetch } from "@/lib/api";
 
 const EMPTY = { date_from: "", date_to: "", region: "", category: "" };
 
-/**
- * FilterBar
- * ---------
- * Renders date-range inputs + region + category dropdowns.
- * Calls onChange(filters) on every field change (auto-apply — no submit button needed).
- * Dynamically loads region and category options from the API.
- *
- * Props:
- *  - onChange {Function} — receives the current filters object
- *  - refreshKey {number} — increment to reload dropdown options after an upload
- */
 export default function FilterBar({ onChange, refreshKey = 0 }) {
-  const [filters, setFilters]     = useState(EMPTY);
-  const [regions, setRegions]     = useState([]);
+  const [filters, setFilters] = useState(EMPTY);
+  const [regions, setRegions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingOpts, setLoadingOpts] = useState(false);
   const [activeCount, setActiveCount] = useState(0);
 
-  // ── Load dropdown options ──────────────────────────────────
   useEffect(() => {
     let cancelled = false;
     setLoadingOpts(true);
@@ -39,22 +27,21 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
       }
     });
 
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [refreshKey]);
 
-  // ── Notify parent on every change ─────────────────────────
   const updateFilter = useCallback(
     (key, value) => {
       const next = { ...filters, [key]: value };
       setFilters(next);
-      // Count active (non-empty) filters for the badge
       setActiveCount(Object.values(next).filter((v) => v !== "").length);
       onChange(next);
     },
     [filters, onChange]
   );
 
-  // ── Reset all filters ──────────────────────────────────────
   function handleReset() {
     setFilters(EMPTY);
     setActiveCount(0);
@@ -62,22 +49,26 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
   }
 
   return (
-    <div className="glass-card px-5 py-4">
-      <div className="flex flex-wrap items-end gap-4">
-
-        {/* Label + badge */}
-        <div className="flex items-center gap-2 mr-2">
-          <svg className="w-4 h-4 text-text-muted" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z" />
+    <div className="card-geist px-5 py-4">
+      <div className="flex flex-wrap items-end gap-3.5">
+        {/* Label & Active Badge */}
+        <div className="flex items-center gap-2 mr-1">
+          <svg
+            className="w-3.5 h-3.5 text-mute"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={1.75}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L13 13.414V19a1 1 0 01-.553.894l-4 2A1 1 0 017 21v-7.586L3.293 6.707A1 1 0 013 6V4z"
+            />
           </svg>
-          <span className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
-            Filters
-          </span>
+          <span className="mono-eyebrow text-[10.5px]">Filters</span>
           {activeCount > 0 && (
-            <span className="flex items-center justify-center w-5 h-5 rounded-full
-                             bg-accent-blue text-white text-[10px] font-bold">
+            <span className="px-1.5 py-0.5 rounded-full bg-accent-blue text-white text-[9.5px] font-mono font-bold leading-none">
               {activeCount}
             </span>
           )}
@@ -85,7 +76,7 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
 
         {/* Date From */}
         <div className="flex flex-col gap-1">
-          <label className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+          <label htmlFor="filterDateFrom" className="mono-eyebrow text-[9.5px]">
             From
           </label>
           <input
@@ -93,16 +84,13 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
             type="date"
             value={filters.date_from}
             onChange={(e) => updateFilter("date_from", e.target.value)}
-            className="px-3 py-2 rounded-md bg-bg-secondary border border-[rgba(99,130,201,0.2)]
-                       text-text-primary text-sm focus:outline-none focus:border-accent-blue
-                       focus:ring-1 focus:ring-accent-blue transition-colors duration-200
-                       [color-scheme:dark]"
+            className="px-2.5 py-1.5 rounded-sm bg-canvas border border-hairline text-ink text-xs focus:outline-none focus:border-accent-blue transition-colors duration-150 [color-scheme:dark]"
           />
         </div>
 
         {/* Date To */}
         <div className="flex flex-col gap-1">
-          <label className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+          <label htmlFor="filterDateTo" className="mono-eyebrow text-[9.5px]">
             To
           </label>
           <input
@@ -110,16 +98,13 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
             type="date"
             value={filters.date_to}
             onChange={(e) => updateFilter("date_to", e.target.value)}
-            className="px-3 py-2 rounded-md bg-bg-secondary border border-[rgba(99,130,201,0.2)]
-                       text-text-primary text-sm focus:outline-none focus:border-accent-blue
-                       focus:ring-1 focus:ring-accent-blue transition-colors duration-200
-                       [color-scheme:dark]"
+            className="px-2.5 py-1.5 rounded-sm bg-canvas border border-hairline text-ink text-xs focus:outline-none focus:border-accent-blue transition-colors duration-150 [color-scheme:dark]"
           />
         </div>
 
         {/* Region */}
         <div className="flex flex-col gap-1">
-          <label className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+          <label htmlFor="filterRegion" className="mono-eyebrow text-[9.5px]">
             Region
           </label>
           <select
@@ -127,21 +112,20 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
             value={filters.region}
             onChange={(e) => updateFilter("region", e.target.value)}
             disabled={loadingOpts}
-            className="px-3 py-2 rounded-md bg-bg-secondary border border-[rgba(99,130,201,0.2)]
-                       text-text-primary text-sm focus:outline-none focus:border-accent-blue
-                       focus:ring-1 focus:ring-accent-blue transition-colors duration-200
-                       disabled:opacity-50 cursor-pointer min-w-[140px]"
+            className="px-2.5 py-1.5 rounded-sm bg-canvas border border-hairline text-ink text-xs focus:outline-none focus:border-accent-blue transition-colors duration-150 disabled:opacity-50 cursor-pointer min-w-[130px]"
           >
             <option value="">All Regions</option>
             {regions.map((r) => (
-              <option key={r} value={r}>{r}</option>
+              <option key={r} value={r}>
+                {r}
+              </option>
             ))}
           </select>
         </div>
 
         {/* Category */}
         <div className="flex flex-col gap-1">
-          <label className="text-[10px] font-medium uppercase tracking-wider text-text-muted">
+          <label htmlFor="filterCategory" className="mono-eyebrow text-[9.5px]">
             Category
           </label>
           <select
@@ -149,30 +133,25 @@ export default function FilterBar({ onChange, refreshKey = 0 }) {
             value={filters.category}
             onChange={(e) => updateFilter("category", e.target.value)}
             disabled={loadingOpts}
-            className="px-3 py-2 rounded-md bg-bg-secondary border border-[rgba(99,130,201,0.2)]
-                       text-text-primary text-sm focus:outline-none focus:border-accent-blue
-                       focus:ring-1 focus:ring-accent-blue transition-colors duration-200
-                       disabled:opacity-50 cursor-pointer min-w-[160px]"
+            className="px-2.5 py-1.5 rounded-sm bg-canvas border border-hairline text-ink text-xs focus:outline-none focus:border-accent-blue transition-colors duration-150 disabled:opacity-50 cursor-pointer min-w-[140px]"
           >
             <option value="">All Categories</option>
             {categories.map((c) => (
-              <option key={c} value={c}>{c}</option>
+              <option key={c} value={c}>
+                {c}
+              </option>
             ))}
           </select>
         </div>
 
-        {/* Reset button — only visible when a filter is active */}
+        {/* Reset Button */}
         {activeCount > 0 && (
           <button
             id="filterResetBtn"
             onClick={handleReset}
-            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium
-                       text-text-secondary border border-[rgba(99,130,201,0.2)]
-                       hover:text-accent-red hover:border-accent-red/40 hover:bg-accent-red/5
-                       transition-all duration-200 self-end"
+            className="button-geist-sm flex items-center gap-1 text-xs text-mute hover:text-accent-red hover:border-accent-red/40 transition-colors duration-150 self-end cursor-pointer"
           >
-            <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" strokeWidth={2}>
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
             Reset

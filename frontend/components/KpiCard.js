@@ -1,54 +1,35 @@
 "use client";
 
-/**
- * KpiCard
- * -------
- * A single animated metric card.
- *
- * Props:
- *  - title       {string}  — metric label
- *  - value       {string}  — formatted value to display
- *  - icon        {JSX}     — SVG icon element
- *  - accentClass {string}  — Tailwind card-accent-* class (e.g. "card-accent-blue")
- *  - glowClass   {string}  — Tailwind shadow-glow-* class
- *  - bgClass     {string}  — icon background gradient class
- *  - loading     {boolean} — show skeleton if true
- */
 export default function KpiCard({
   title,
   value,
   icon,
-  accentClass = "card-accent-blue",
-  glowClass   = "shadow-glow-blue",
-  bgClass     = "bg-gradient-blue",
-  loading     = false,
+  loading = false,
 }) {
   if (loading) {
     return (
-      <div className="glass-card card-accent-blue p-5 animate-pulse">
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-3 w-24 bg-bg-secondary rounded" />
-          <div className="w-10 h-10 rounded-lg bg-bg-secondary" />
+      <div className="card-geist p-4.5 animate-pulse">
+        <div className="flex items-center justify-between mb-3.5">
+          <div className="h-2.5 w-20 bg-white/5 rounded" />
+          <div className="w-7 h-7 rounded-sm bg-white/5" />
         </div>
-        <div className="h-7 w-32 bg-bg-secondary rounded mt-2" />
+        <div className="h-6 w-28 bg-white/5 rounded" />
       </div>
     );
   }
 
   return (
-    <div className={`glass-card ${accentClass} p-5 animate-fade-up`}>
-      {/* Header row — label + icon */}
-      <div className="flex items-center justify-between mb-4">
-        <p className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
-          {title}
-        </p>
-        <div className={`flex items-center justify-center w-10 h-10 rounded-lg ${bgClass} ${glowClass}`}>
-          <span className="text-white w-5 h-5">{icon}</span>
+    <div className="card-geist p-4.5 flex flex-col justify-between animate-fade-up">
+      {/* Header row */}
+      <div className="flex items-center justify-between gap-2 mb-3">
+        <span className="mono-eyebrow text-[10.5px] truncate">{title}</span>
+        <div className="flex items-center justify-center w-6 h-6 rounded-sm bg-white/5 border border-hairline text-mute shrink-0">
+          {icon}
         </div>
       </div>
 
-      {/* Value */}
-      <p className="text-2xl font-bold text-text-primary tracking-tight">
+      {/* Metric Value */}
+      <p className="text-xl font-semibold text-ink tracking-tight font-sans">
         {value ?? "—"}
       </p>
     </div>

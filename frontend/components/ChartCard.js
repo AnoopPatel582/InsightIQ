@@ -1,17 +1,5 @@
 "use client";
 
-/**
- * ChartCard
- * ---------
- * A reusable wrapper card for any Chart.js chart.
- *
- * Props:
- *  - title    {string}  — card heading
- *  - subtitle {string}  — optional subtitle
- *  - children {JSX}     — the chart component
- *  - loading  {boolean} — show skeleton overlay
- *  - height   {string}  — Tailwind height class for the chart area (default "h-72")
- */
 export default function ChartCard({
   title,
   subtitle,
@@ -20,20 +8,22 @@ export default function ChartCard({
   height = "h-72",
 }) {
   return (
-    <div className="glass-card p-5 flex flex-col">
+    <div className="card-geist p-5 flex flex-col">
       {/* Header */}
-      <div className="mb-4">
-        <h4 className="text-sm font-semibold text-text-primary">{title}</h4>
-        {subtitle && (
-          <p className="text-xs text-text-muted mt-0.5">{subtitle}</p>
-        )}
+      <div className="mb-4 flex items-start justify-between">
+        <div>
+          <h4 className="text-sm font-semibold text-ink tracking-tight">{title}</h4>
+          {subtitle && (
+            <p className="text-xs text-mute mt-0.5">{subtitle}</p>
+          )}
+        </div>
       </div>
 
-      {/* Chart area */}
+      {/* Chart Canvas Area */}
       <div className={`relative flex-1 ${height}`}>
         {loading ? (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 rounded-full border-2 border-accent-blue border-t-transparent animate-spin" />
+            <div className="w-6 h-6 rounded-full border-2 border-hairline border-t-ink animate-spin" />
           </div>
         ) : (
           children
