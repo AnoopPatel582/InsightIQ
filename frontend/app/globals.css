@@ -1,33 +1,64 @@
 @import "tailwindcss";
 
 @theme {
+  /* ── Dark Geist Surface Colors ── */
+  --color-canvas: #0a0e1a;
+  --color-canvas-elevated: #111827;
+  --color-canvas-hover: #1a2234;
+  --color-canvas-inset: #0e1422;
+
+  /* Backward compatibility aliases for existing components */
   --color-bg-primary: #0a0e1a;
   --color-bg-secondary: #111827;
-  --color-bg-card: #1a2234;
-  --color-bg-card-hover: #1e2a3e;
+  --color-bg-card: #111827;
+  --color-bg-card-hover: #1a2234;
 
-  --color-accent-blue: #3b82f6;
-  --color-accent-purple: #8b5cf6;
-  --color-accent-cyan: #06b6d4;
-  --color-accent-green: #10b981;
-  --color-accent-amber: #f59e0b;
-  --color-accent-red: #ef4444;
+  /* ── Dark Geist Typography Colors ── */
+  --color-ink: #f0f4ff;
+  --color-body: #94a3b8;
+  --color-mute: #64748b;
+  --color-faint: #475569;
 
   --color-text-primary: #f0f4ff;
   --color-text-secondary: #94a3b8;
-  --color-text-muted: #4b5563;
+  --color-text-muted: #64748b;
 
+  /* ── Hairline Border System (1px precision) ── */
+  --color-hairline: rgba(255, 255, 255, 0.08);
+  --color-hairline-soft: rgba(255, 255, 255, 0.04);
+  --color-hairline-focus: rgba(0, 112, 243, 0.6);
+
+  /* ── Geist Brand & Chromatic Accents ── */
+  --color-accent-blue: #0070f3;
+  --color-accent-purple: #7928ca;
+  --color-accent-cyan: #50e3c2;
+  --color-accent-pink: #ff0080;
+  --color-accent-green: #10b981;
+  --color-accent-amber: #f5a623;
+  --color-accent-red: #ef4444;
+
+  --color-link: #0070f3;
+  --color-link-deep: #0761d1;
+  --color-link-soft: rgba(0, 112, 243, 0.15);
+
+  /* ── Fonts ── */
   --font-sans: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --radius-sm: 8px;
+  /* ── Geist Bimodal Radii Scale ── */
+  --radius-none: 0px;
+  --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-pill-category: 64px;
+  --radius-pill: 100px;
+  --radius-full: 9999px;
 
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-glow-blue: 0 0 24px rgba(59, 130, 246, 0.25);
-  --shadow-glow-purple: 0 0 24px rgba(139, 92, 246, 0.25);
+  /* ── Geist Elevation Levels ── */
+  --shadow-whisper: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  --shadow-floating: 0px 2px 4px rgba(0, 0, 0, 0.25), 0px 8px 16px -4px rgba(0, 0, 0, 0.35);
+  --shadow-glow-blue: 0 0 24px rgba(0, 112, 243, 0.2);
+  --shadow-glow-purple: 0 0 24px rgba(121, 40, 202, 0.2);
 }
 
 /* ── Base resets ───────────────────────────────────────────── */
@@ -36,89 +67,181 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: var(--color-bg-primary, #0a0e1a);
-  color: var(--color-text-primary, #f0f4ff);
+  background-color: var(--color-canvas, #0a0e1a);
+  color: var(--color-ink, #f0f4ff);
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Custom scrollbar ─────────────────────────────────────── */
-::-webkit-scrollbar { width: 6px; }
+/* ── Custom Geist scrollbar ───────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: #0a0e1a; }
-::-webkit-scrollbar-thumb { background: rgba(99, 130, 201, 0.3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #3b82f6; }
+::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.24); }
 
-/* ── Custom Utilities ──────────────────────────────────────── */
+/* ── Geist Typography & Utilities ──────────────────────────── */
+
+/* Technical section eyebrow (Geist Mono, 12px, uppercase spec-sheet style) */
+@utility mono-eyebrow {
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-mute, #64748b);
+}
+
+/* Display & Heading tight letter-tracking utilities */
+@utility tracking-display {
+  letter-spacing: -2.4px;
+}
+
+@utility tracking-heading-lg {
+  letter-spacing: -1.28px;
+}
+
+@utility tracking-heading-md {
+  letter-spacing: -0.4px;
+}
+
+@utility tracking-label-sm {
+  letter-spacing: -0.28px;
+}
+
+/* Geist Card System (1px hairline precision, flat default, whisper hover) */
+@utility card-geist {
+  background-color: var(--color-canvas-elevated, #111827);
+  border: 1px solid var(--color-hairline, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Backward compatibility alias for glass-card */
+@utility glass-card {
+  background-color: var(--color-canvas-elevated, #111827);
+  border: 1px solid var(--color-hairline, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-1px);
+    box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.3);
+  }
+}
+
+/* Bimodal Buttons */
+@utility button-pill-primary {
+  background-color: #ffffff;
+  color: #0a0e1a;
+  font-weight: 500;
+  font-size: 14px;
+  border-radius: 100px;
+  padding: 8px 18px;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+
+  &:hover {
+    opacity: 0.92;
+  }
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+@utility button-pill-secondary {
+  background-color: transparent;
+  color: #f0f4ff;
+  font-weight: 500;
+  font-size: 14px;
+  border: 1px solid var(--color-hairline, rgba(255, 255, 255, 0.1));
+  border-radius: 100px;
+  padding: 8px 18px;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+@utility button-geist-sm {
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border: 1px solid var(--color-hairline, rgba(255, 255, 255, 0.08));
+  background-color: var(--color-canvas-elevated, #111827);
+  color: var(--color-ink, #f0f4ff);
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+
+  &:hover {
+    background-color: var(--color-canvas-hover, #1a2234);
+    border-color: rgba(255, 255, 255, 0.16);
+  }
+}
+
+/* Vercel Mesh Gradient Hero Background */
+@utility vercel-mesh-hero {
+  background-image:
+    radial-gradient(at 0% 0%, rgba(0, 112, 243, 0.22) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(121, 40, 202, 0.22) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(80, 227, 194, 0.12) 0px, transparent 50%);
+}
+
+/* Brand Gradient Text */
+@utility text-gradient-geist {
+  background: linear-gradient(180deg, #ffffff 0%, #a1a1a1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
 @utility text-gradient-blue {
-  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  background: linear-gradient(135deg, #0070f3, #50e3c2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 @utility text-gradient-purple {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #7928ca, #ff0080);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 @utility bg-gradient-blue {
-  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+  background: linear-gradient(135deg, #0070f3, #50e3c2);
 }
 
 @utility bg-gradient-purple {
-  background: linear-gradient(135deg, #8b5cf6, #ec4899);
+  background: linear-gradient(135deg, #7928ca, #ff0080);
 }
 
 @utility bg-gradient-green {
-  background: linear-gradient(135deg, #10b981, #3b82f6);
+  background: linear-gradient(135deg, #10b981, #0070f3);
 }
 
 @utility bg-gradient-amber {
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  background: linear-gradient(135deg, #f5a623, #ef4444);
 }
 
-@utility card-accent-blue {
-  border-top: 3px solid #3b82f6;
-}
-
-@utility card-accent-purple {
-  border-top: 3px solid #8b5cf6;
-}
-
-@utility card-accent-green {
-  border-top: 3px solid #10b981;
-}
-
-@utility card-accent-amber {
-  border-top: 3px solid #f59e0b;
-}
-
-@utility card-accent-cyan {
-  border-top: 3px solid #06b6d4;
-}
-
-@utility glass-card {
-  background: #1a2234;
-  border: 1px solid rgba(99, 130, 201, 0.15);
-  border-radius: 16px;
-  transition: background 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-
-  &:hover {
-    background: #1e2a3e;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-  }
-}
-
+/* Animations */
 @utility animate-fade-up {
-  animation: fadeSlideUp 0.45s cubic-bezier(0.4, 0, 0.2, 1) both;
+  animation: fadeSlideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes fadeSlideUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
